@@ -12,7 +12,7 @@ J'envisage de faire le front avec VueJS à terme.
 ```
 MySQL
 Express
-VueJS
+VueJS (à venir)
 NodeJS
 ```
 
