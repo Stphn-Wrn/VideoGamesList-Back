@@ -46,7 +46,7 @@ const updateOne = (req, res) => {
     games.editor = body.editor;
     games.style = body.style;
     games.platform = body.platform;
-    games.description = body.description;
+    games.description = body.description; 
     games.save()
     .then(() => res.status(200).json({ message: 'Updated game' }))
     .catch((error) => res.status(500).json(error))
