@@ -5,7 +5,6 @@ Ayant de nombreux jeux sur Steam/Origin/Battle.net, j'ai décider de créer une 
 L'intérêt principal était de manipuler Node et ses frameworks.
 
 Pour l'instant seul le createOne fonctionne et il n'y a pas de front. </br></br>
-J'envisage de faire le front avec VueJS à terme.
 
 ### Stack
 
