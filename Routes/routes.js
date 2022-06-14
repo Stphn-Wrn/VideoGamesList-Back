@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import cors from 'cors';
-import { getAll, getOne, createOne, updateOne, deleteOne } from '../Controllers/controllers.js';
+import { getAll, getOne, createOne, updateOne, deleteOne } from '../Controllers/gameControllers.js';
 import { createUser, deleteUser } from '../Controllers/userControllers.js';
 
 const router = Router();
