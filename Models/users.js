@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import dataBase from '../dbConfig/dbData.js';
-import { bcrypt } from 'bcrypt'
 const user = dataBase.define('Users', {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,

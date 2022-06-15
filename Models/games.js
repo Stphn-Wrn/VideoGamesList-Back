@@ -16,10 +16,6 @@ const games = dataBase.define('Games', {
     type: DataTypes.STRING,
     allowNull: true
   },
-  style: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
   platform: {
     type: DataTypes.STRING,
     allowNull: true
