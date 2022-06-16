@@ -1,5 +1,5 @@
-import games from '../Models/games.js'
-import gameValidation from '../Validation/gameValidation.js';
+import games from '../Models/games.model.js'
+import gameValidation from '../Validation/game.validation.js';
 
 
 const getAll = (req, res) => {

@@ -2,11 +2,8 @@ import Joi from 'joi';
 
 const userValidation = (body) => {
   const userSchema = Joi.object({
-    UserName: Joi.string().alphanum().min(3).max(30).required(),
-    Name: Joi.string().min(3).max(30).trim(),
-    FirstName: Joi.string().min(3).max(40).trim(),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: true } }),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: true } }).required(),
+    password: Joi.string(),
     repeat_password: Joi.ref('password'),
     access_token: [
       Joi.string(),
@@ -20,3 +17,5 @@ const userValidation = (body) => {
   return userSchema.validate(body);
 }
 export default userValidation;
+
+//.pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))

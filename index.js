@@ -1,6 +1,6 @@
 import express from 'express';
 import routes from './Routes/routes.js'
-import dataBase from './dbConfig/dbData.js'
+import dataBase from './Config/db.config.js'
 const app = express();
 
 app.use(express.json());

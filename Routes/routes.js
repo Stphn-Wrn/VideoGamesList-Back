@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import cors from 'cors';
-import { getAll, getOne, createOne, updateOne, deleteOne } from '../Controllers/gameControllers.js';
-import { createUser, deleteUser } from '../Controllers/userControllers.js';
+import { getAll, getOne, createOne, updateOne, deleteOne } from '../Controllers/games.controllers.js';
+import { createUser, deleteUser } from '../Controllers/users.controllers.js';
 
 const router = Router();
 
@@ -13,4 +13,5 @@ router.delete('/deleteOne/:id', cors(), deleteOne);
 
 router.post('/createUser', cors(), createUser);
 router.delete('/deleteUser/', cors(), deleteUser);
+
 export default router;

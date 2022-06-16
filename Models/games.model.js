@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import dataBase from '../dbConfig/dbData.js';
+import dataBase from '../Config/db.config.js';
 
 const games = dataBase.define('Games', {
   id: {
