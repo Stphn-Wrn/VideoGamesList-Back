@@ -20,5 +20,6 @@ router.post('/login', cors(), login);
 router.get('/user', cors(), checkToken, getUser);
 router.get('/logout', cors(), checkToken, logout);
 
-router.all('*',  (req, res) => res.status(400).json({'error': 'Bad Request.'}))
+router.all('/*',  (req, res) => res.status(400).json({'error': 'Bad Request.'}))
+
 export default router;

@@ -1,8 +1,14 @@
 import jwt from 'jsonwebtoken';
 import { secret, ttl } from '../Config/jwt.config.js';
 
-const verifyToken = (token) => { jwt.verify(token, secret); }
+function verifyToken(token){
+const tokenVerified = jwt.verify(token, secret); 
+return tokenVerified;
+}
 
-const createToken = (data) => { jwt.sign(data, secret, { expiresIn: ttl }); }
+function createToken(data){ 
+   const token = jwt.sign(data, secret, { expiresIn: ttl });
+   return token;
+ }
 
 export { verifyToken, createToken }

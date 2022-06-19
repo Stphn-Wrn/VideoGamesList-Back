@@ -41,16 +41,15 @@ async function login(req, res){
   if(user) {
     const isMatched = await bcrypt.compare(req.body.password, user.password);
     if(isMatched){
-      const token =  createToken({id: user.id});
-      console.log('Bearer', token, ttl)
+      const token = createToken({id: user.id});
   res.json({
-         token_type: 'Bearer',
-         access_token: token,
-         expires_in: ttl
+        user, 
+        access_token: 'Bearer '+token,
+        expires_in: ttl
        });
     }
   } else {
-    return res.status(500).json()
+    return res.status(500).json();
   }
 
 }
