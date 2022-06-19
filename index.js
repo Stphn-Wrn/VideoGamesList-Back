@@ -1,6 +1,9 @@
 import express from 'express';
-import routes from './Routes/routes.js'
-import dataBase from './Config/db.config.js'
+import routes from './app/Routes/routes.js';
+import dataBase from './app/Config/db.config.js';
+// import jwt from 'jsonwebtoken';
+import 'dotenv/config'
+
 const app = express();
 
 app.use(express.json());
@@ -12,4 +15,6 @@ dataBase.sync()
         .then((console.log("Connected to Database")))
         .catch(error => console.error(error))
 
-app.listen(5000, () => console.log('Port 5000 connected'));
+app.listen(4000, () => console.log('Port 5000 connected'));
+
+

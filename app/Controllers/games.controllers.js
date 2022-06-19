@@ -7,7 +7,8 @@ const getAll = (req, res) => {
     attributes: {exclude: ['createdAt', 'updatedAt']}
   })
   .then(games => {
-    res.status(200).json(games)
+    const { error } = userValidation(user)
+   if (error) return res.status(401).json(error.details[0].message)
   })
   .catch((error) => res.status(500).json(error))
 };
