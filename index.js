@@ -17,6 +17,6 @@ dataBase.sync()
         .then((console.log("Connected to Database")))
         .catch(error => console.error(error))
 
-app.listen(4000, () => console.log('Port 5000 connected'));
+app.listen(4000, () => console.log('Port 4000 connected'));
 
 

@@ -2,7 +2,7 @@ import User from '../Models/users.model.js'
 import bcrypt from 'bcrypt';
 import { createToken } from '../Utils/jwt.utils.js';
 import { ttl } from '../Config/jwt.config.js';
-import '../Utils/cache.utils.js';
+import cache from '../Utils/cache.utils.js';
 
 /**
  * Register function
@@ -62,8 +62,8 @@ async function login(req, res){
  */
 async function getUser(req, res){
   const user = await User.findByPk(req.user.id);
-  return res.status(200).json(user)
-};
+  return res.status(200).json(user, 'User found')
+}
 
 /**
  * LogOut function
