@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { createToken } from '../Utils/jwt.utils.js';
 import { ttl } from '../Config/jwt.config.js';
 import cache from '../Utils/cache.utils.js';
+import  userValidation  from '../Validation/users.validation.js'
 
 /**
  * Register function
@@ -12,9 +13,15 @@ import cache from '../Utils/cache.utils.js';
  */
 async function register(req, res){
 
+  const { body } = req;
+  const { error } = userValidation(body)
+  if (error) return res.status(401).json(error.details[0].message)
+
   const isExist = await User.findOne({
     where:{ email: req.body.email }
   })
+
+
   if(isExist) {
     return res.status(400).json({ error: 'Email already exists.'});
   }
@@ -24,6 +31,7 @@ async function register(req, res){
     email: req.body.email,
     password: hashedPassword
   });
+  
   return res.status(200).json(user)
       };
 
@@ -34,6 +42,11 @@ async function register(req, res){
 * @returns 
 */
 async function login(req, res){
+
+  const { body } = req;
+  const { error } = userValidation(body)
+  if (error) return res.status(401).json(error.details[0].message)
+
   const user = await User.findOne({
     where: { email: req.body.email }
   });

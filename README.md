@@ -17,13 +17,18 @@ NodeJS
 
 ## Dépendances :
 
-Nodemon </br>
-Express </br>
-MySQL2 </br>
+Bcrypt </br>
+Cors </br>
 Dotenv </br>
+Express </br>
 Joi </br>
 JasonWebToken </br>
 KeyV </br>
+MySQL2 </br>
+Nodemon </br>
+Sequelize </br>
+
+
 
 ## Repository Front 
 https://github.com/Stphn-Wrn/VideoGamesList-Front
