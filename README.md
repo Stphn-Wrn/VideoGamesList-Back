@@ -22,6 +22,8 @@ Express </br>
 MySQL2 </br>
 Dotenv </br>
 Joi </br>
+JasonWebToken </br>
+KeyV </br>
 
 ## Repository Front 
 https://github.com/Stphn-Wrn/VideoGamesList-Front
