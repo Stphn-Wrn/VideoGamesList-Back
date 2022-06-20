@@ -1,16 +1,18 @@
 import express from 'express';
 import routes from './app/Routes/routes.js';
 import dataBase from './app/Config/db.config.js';
-
+import cors from 'cors'
 // import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 
-
+ 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.options('*', cors());
+app.use(routes);
 
-app.use(routes)
 
 
 dataBase.sync()

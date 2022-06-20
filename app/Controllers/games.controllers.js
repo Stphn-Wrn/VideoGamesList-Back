@@ -2,21 +2,20 @@ import games from '../Models/games.model.js'
 import gameValidation from '../Validation/game.validation.js';
 
 
+
 const getAll = (req, res) => {
   games.findAll({
     attributes: {exclude: ['createdAt', 'updatedAt']}
   })
   .then(games => {
-    const { error } = userValidation(user)
-   if (error) return res.status(401).json(error.details[0].message)
+    res.status(200).json(games)
   })
   .catch((error) => res.status(500).json(error))
 };
 
-
 const getOne = (req, res) => {
   const { id } = req.params
-  games.findByPk(id) // findByPrimaryKey
+  Games.findByPk(id) // findByPrimaryKey
   .then(games => {
     if(!games) return res.status(404).json( {message: 'Game not found.' })
     res.status(200).json(games)
@@ -29,7 +28,7 @@ const createOne = (req, res) => {
   const { error } = gameValidation(body)
   if (error) return res.status(401).json(error.details[0].message)
 
-  games.create({ ... body})
+  Games.create({ ... body})
   .then(() => {
     res.status(201).json({ message: 'Created game' })
   })
@@ -40,7 +39,7 @@ const updateOne = (req, res) => {
   const { id } = req.params
   const { body } = req;
 
-  games.findByPk(id)
+  Games.findByPk(id)
   .then(games => {
     if(!games) return res.status(404).json({ message: 'Game not found.' })
     games.title = body.title;
