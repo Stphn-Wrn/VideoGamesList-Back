@@ -1,0 +1,1 @@
+## 1. Modify database setup -> Models / Migrations..

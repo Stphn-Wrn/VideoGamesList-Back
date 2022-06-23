@@ -15,7 +15,7 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { id } = req.params
-  Games.findByPk(id) // findByPrimaryKey
+  games.findByPk(id) // findByPrimaryKey
   .then(games => {
     if(!games) return res.status(404).json( {message: 'Game not found.' })
     res.status(200).json(games)
@@ -28,7 +28,7 @@ const createOne = (req, res) => {
   const { error } = gameValidation(body)
   if (error) return res.status(401).json(error.details[0].message)
 
-  Games.create({ ... body})
+  games.create({ ... body})
   .then(() => {
     res.status(201).json({ message: 'Created game' })
   })
@@ -39,7 +39,7 @@ const updateOne = (req, res) => {
   const { id } = req.params
   const { body } = req;
 
-  Games.findByPk(id)
+  games.findByPk(id)
   .then(games => {
     if(!games) return res.status(404).json({ message: 'Game not found.' })
     games.title = body.title;

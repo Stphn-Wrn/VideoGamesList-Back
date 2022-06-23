@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { createToken } from '../Utils/jwt.utils.js';
 import { ttl } from '../Config/jwt.config.js';
 import cache from '../Utils/cache.utils.js';
-import  userValidation  from '../Validation/users.validation.js'
+import  { userRegisterValidation, userLoginValidation }  from '../Validation/users.validation.js'
 
 /**
  * Register function
@@ -14,7 +14,7 @@ import  userValidation  from '../Validation/users.validation.js'
 async function register(req, res){
 
   const { body } = req;
-  const { error } = userValidation(body)
+  const { error } = userRegisterValidation(body)
   if (error) return res.status(401).json(error.details[0].message)
 
   const isExist = await User.findOne({
@@ -44,7 +44,7 @@ async function register(req, res){
 async function login(req, res){
 
   const { body } = req;
-  const { error } = userValidation(body)
+  const { error } = userLoginValidation(body)
   if (error) return res.status(401).json(error.details[0].message)
 
   const user = await User.findOne({
@@ -75,7 +75,7 @@ async function login(req, res){
  */
 async function getUser(req, res){
   const user = await User.findByPk(req.user.id);
-  return res.status(200).json(user, 'User found')
+  return res.status(200).json(user)
 }
 
 /**
