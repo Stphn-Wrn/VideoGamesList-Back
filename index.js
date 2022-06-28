@@ -1,24 +1,26 @@
 import express from 'express';
-import routes from './app/Routes/routes.js';
-import dataBase from './app/Config/db.config.js';
-import cors from 'cors'
-// import jwt from 'jsonwebtoken';
-import 'dotenv/config'
-
+import router from './app/Routes/routes.js';
+import connection from './app/Config/db.config.js';
+import cors from 'cors';
+import 'dotenv/config';
  
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.options('*', cors());
-app.use(routes);
+app.use(router);
 
+        connection.connect(function(err) {
+                if (err) {
+                  console.error('error connecting: ' + err.stack);
+                  return;
+                }
+               
+                console.log('MySQL connected');
+              });
+        
 
-
-dataBase.sync()
-        .then((console.log("Connected to Database")))
-        .catch(error => console.error(error))
-
-app.listen(3000, () => console.log('Port 3000 connected'));
+app.listen(process.env.PORT, () => console.log('Port '+ process.env.PORT +' connected'));
 
 

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { getAll, getOne, createOne, updateOne, deleteOne } from '../Controllers/games.controllers.js';
-import { getUser, register, login, logout } from '../Controllers/users.controllers.js';
+ import { getAll, getOne, deleteOne, createOne, updateOne  } from '../Controllers/games.controllers.js';
+import {register, login, getUser, logout}  from '../Controllers/users.controllers.js';
 import { checkToken } from '../Middleware/user.middleware.js';
 
 
@@ -20,6 +20,6 @@ router.post('/login', login);
 router.get('/user', checkToken, getUser);
 router.get('/logout', checkToken, logout);
 
-router.all('/*',  (req, res) => res.status(400).json({'error': 'Bad Request.'}))
+ router.all('/*',  (req, res) => res.status(400).json({'error': 'Bad Request.'}))
 
 export default router;

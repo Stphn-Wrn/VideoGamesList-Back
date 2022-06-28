@@ -1,67 +1,99 @@
-import games from '../Models/games.model.js'
-import gameValidation from '../Validation/game.validation.js';
+import connection from '../Config/db.config.js';
 
-
-
+// Find all Games
 const getAll = (req, res) => {
-  games.findAll({
-    attributes: {exclude: ['createdAt', 'updatedAt']}
-  })
-  .then(games => {
-    res.status(200).json(games)
-  })
-  .catch((error) => res.status(500).json(error))
+  try{
+    connection.query('SELECT * FROM Games', (err, rows, fields) => {
+      if (!err)
+      res.status(200).json(
+        rows
+      );
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: "Some errors occured",
+      err
+    });
+  } 
 };
 
+// Find Game by ID
 const getOne = (req, res) => {
-  const { id } = req.params
-  games.findByPk(id) // findByPrimaryKey
-  .then(games => {
-    if(!games) return res.status(404).json( {message: 'Game not found.' })
-    res.status(200).json(games)
-  })
-  .catch((error) => res.status(500).json(error))
+  const { id } = req.params;
+  try{
+    connection.query('SELECT * FROM Games WHERE id = ?',[id], (err, rows, fields) => {
+     if (!err)
+     res.status(200).json(
+       rows
+     );
+     else next(err);
+   });
+ } catch (err) {
+   console.log(err);
+   res.status(400).json({
+     message: "Some errors occured",
+     err
+   });
+ } 
+};
+
+// Delete game by ID
+const deleteOne = (req, res) => {
+  try{
+    connection.query('DELETE FROM Games WHERE id = ?',[req.params.id], (err, rows, fields) => {
+     if (!err)
+     res.status(200).json(
+       { message: 'Games deleted'}
+     );
+     else next(err);
+   });
+ } catch (err) {
+   console.log(err);
+   res.status(400).json({
+     message: "Some errors occured",
+     err
+   });
+ } 
 };
 
 const createOne = (req, res) => {
-  const { body } = req
-  const { error } = gameValidation(body)
-  if (error) return res.status(401).json(error.details[0].message)
-
-  games.create({ ... body})
-  .then(() => {
-    res.status(201).json({ message: 'Created game' })
-  })
-  .catch((error) => res.status(500).json(error))
+  try {
+    let values = [req.body.title, req.body.editor, req.body.platform, req.body.description];
+    connection.query('INSERT INTO Games (title, editor, platform, description) VALUES (?)', [values], (err, rows, fields) => {
+    if(!err) {
+      res.status(200).json(
+        { message: `New game add : title -> ${req.body.title} - editor -> ${req.body.editor} - platform -> ${req.body.platform} - description -> ${req.body.description}` })
+      }
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: "Some errors occured",
+      err
+    });
+  }
 };
 
 const updateOne = (req, res) => {
-  const { id } = req.params
-  const { body } = req;
-
-  games.findByPk(id)
-  .then(games => {
-    if(!games) return res.status(404).json({ message: 'Game not found.' })
-    games.title = body.title;
-    games.editor = body.editor;
-    games.style = body.style;
-    games.platform = body.platform;
-    games.description = body.description; 
-    games.save()
-    .then(() => res.status(200).json({ message: 'Updated game' }))
-    .catch((error) => res.status(500).json(error))
+try {
+  const itemsToModify = req.body;
+  const sql = "UPDATE Games SET title = ?, editor = ?, platform = ?, description = ? WHERE id = ?";
+  const params = [itemsToModify.title, itemsToModify.editor, itemsToModify.platform, itemsToModify.description, req.params.id];
+  connection.query(sql, params, (err, rows, fields) => {
+    if (!err) {
+      res.status(200).json(
+        { message: `Game updated : title -> ${itemsToModify.title} - editor -> ${itemsToModify.editor} - platform -> ${itemsToModify.platform} - description -> ${itemsToModify.description}` })
+    }
   })
-  .catch((error) => res.status(500).json(error))
+} catch (err) { 
+  console.log(err);
+  res.status(400).json({
+    message: "Some errors occured",
+    err
+  });
+}
 };
 
-const deleteOne = (req, res) => {
-  const { id } = req.params;
-  games.destroy( {where: {id: id} })
-  .then(ressource => {
-    if(ressource === 0) return res.status(404).json({ message: 'Not found.' })
-    res.status(200).json({ message: 'Deleted game' })
-  })
-  .catch((error) => res.status(500).json(error))
-};
 
-export { getAll, getOne, createOne, updateOne, deleteOne }
+export { getAll, getOne, deleteOne, createOne, updateOne }

@@ -1,97 +1,85 @@
-import User from '../Models/users.model.js'
+import connection from '../Config/db.config.js';
 import bcrypt from 'bcrypt';
 import { createToken } from '../Utils/jwt.utils.js';
 import { ttl } from '../Config/jwt.config.js';
 import cache from '../Utils/cache.utils.js';
-import  { userRegisterValidation, userLoginValidation }  from '../Validation/users.validation.js'
 
-/**
- * Register function
- * @param {*} req 
- * @param {*} res 
- * @returns 
- */
-async function register(req, res){
-
-  const { body } = req;
-  const { error } = userRegisterValidation(body)
-  if (error) return res.status(401).json(error.details[0].message)
-
-  const isExist = await User.findOne({
-    where:{ email: req.body.email }
-  })
-
-
-  if(isExist) {
-    return res.status(400).json({ error: 'Email already exists.'});
-  }
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-  const user = await User.create({
-    email: req.body.email,
-    password: hashedPassword
-  });
+async function register (req, res){
   
-  return res.status(200).json(user)
-      };
-
-/**
-* Login function
-* @param {*} req 
-* @param {*} res 
-* @returns 
-*/
-async function login(req, res){
-
-  const { body } = req;
-  const { error } = userLoginValidation(body)
-  if (error) return res.status(401).json(error.details[0].message)
-
-  const user = await User.findOne({
-    where: { email: req.body.email }
-  });
-
-  if(user) {
-    const isMatched = await bcrypt.compare(req.body.password, user.password);
-    if(isMatched){
-      const token = createToken({id: user.id});
-  res.json({
-        user, 
-        access_token: 'Bearer '+token,
-        expires_in: ttl
-       });
+  connection.query('SELECT email FROM Users WHERE email= ?',req.body.email, (err, result) => {
+    if (err) throw err;
+    if (result.length>0){
+      res.status(400).json({ message: "user already registered" });
     }
-  } else {
-    return res.status(500).json();
+  });
+  const generatePassword = async (hashedPassword) => {
+    return await new Promise((res, rej) => {
+      bcrypt.hash(hashedPassword, 10, (err, hash) => {
+        if (err) rej(err);
+        res(hash);
+      });
+    });
+  };
+  const password = await generatePassword(req.body.password)
+  const values = [req.body.email, password, req.body.firstname, req.body.name];
+  connection.query('INSERT INTO Users (email, password, firstname, name) VALUES (?)', [values], (err, rows, fields) => {
+          if (!err) {
+            res.status(200).json({ message: 'New user add' })
+          }
+        })
+      }
+ 
+const login = (req, res) => {
+  connection.query('SELECT * FROM Users WHERE email = ?', req.body.email, (error, results, fields) => {
+    if(error) throw error;
+    else {
+      if (results.length > 0) {
+        bcrypt.compare(req.body.password, results[0].password, (err, result) => {
+          if(result){
+            const token = createToken({ id: results.id })
+            return res.json({ 
+              results,
+              access_token: 'Bearer ' + token,
+              expires_in: ttl
+             });
+          }
+          else {
+            return res.status(400).json({ message: "Invalid password" });
+          }
+        })
+      } else {
+        return res.status(400).json({ message: 'Invalid email' })
+      }
+    }
+  })
+};
+ 
+ const getUser = (req, res) => {
+  try {
+    connection.query('SELECT * FROM Users WHERE id = ?', req.body.id, (err, rows, fields) => {
+      if(!err){
+        res.status(200).json({ message: 'Authenticated' })
+      }
+    }) 
   }
+  catch (error) {
+  res.status(400).json({
+    message: "Some errors occured",
+    err
+  });
+  }
+};
 
-}
-
-/**
- * getUser function
- * @param {*} req 
- * @param {*} res 
- * @returns 
- */
-async function getUser(req, res){
-  const user = await User.findByPk(req.user.id);
-  return res.status(200).json(user)
-}
-
-/**
- * LogOut function
- * @param {*} req 
- * @param {*} res 
- * @returns 
- */
 async function logout(req, res){
+
   const token = req.token;
   const now = new Date();
   const expire = new Date(req.user.exp);
   const milliseconds = now.getTime() - expire.getTime();
-
   await cache.set(token, token, milliseconds);
   return res.status(200).json({ message: 'Logged out successfully.'})
+
 }
 
-export { logout, register, login, getUser }
+
+export {register,  login, getUser, logout }

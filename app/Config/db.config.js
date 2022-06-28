@@ -1,4 +1,12 @@
-import { Sequelize } from 'sequelize';
 import 'dotenv/config'
 
-export default new Sequelize(process.env.DBNAME, process.env.DB_USER_NAME, process.env.DB_PASSWORD, { dialect: 'mysql', host: process.env.DB_HOST})
+import mysql from 'mysql';
+
+let connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER_NAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DBNAME,
+});
+
+export default connection;
